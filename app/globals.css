@@ -247,6 +247,10 @@ html.theme-switching::before {
   animation: countdown-enter 600ms cubic-bezier(.22, 1, .36, 1) both;
 }
 
+html[data-intro-done="true"] .countdown-card {
+  animation: countdown-spotlight 1100ms 80ms cubic-bezier(.16, 1, .3, 1) both;
+}
+
 .countdown-unit {
   animation: countdown-unit-enter 500ms cubic-bezier(.22, 1, .36, 1) both;
 }
@@ -258,6 +262,13 @@ html.theme-switching::before {
 @keyframes countdown-enter {
   from { opacity: 0; transform: translateY(8px) scale(.99); }
   to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes countdown-spotlight {
+  0% { opacity: 0; transform: translateY(-52px) scale(1.14); box-shadow: 0 0 0 color-mix(in srgb, var(--accent) 0%, transparent); }
+  35% { opacity: 1; transform: translateY(-18px) scale(1.06); box-shadow: 0 22px 52px color-mix(in srgb, var(--accent) 30%, transparent); }
+  68% { opacity: 1; transform: translateY(3px) scale(.985); box-shadow: 0 8px 22px color-mix(in srgb, var(--accent) 12%, transparent); }
+  100% { opacity: 1; transform: translateY(0) scale(1); box-shadow: 0 1px 2px color-mix(in srgb, var(--ink) 5%, transparent), 0 10px 24px color-mix(in srgb, var(--ink) 4%, transparent); }
 }
 
 @keyframes countdown-unit-enter {

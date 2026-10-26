@@ -13,7 +13,10 @@ export function IntroScreen() {
     const removeAfter = reducedMotion ? 180 : 1650;
 
     const leaveTimer = window.setTimeout(() => setState("leaving"), leaveAfter);
-    const removeTimer = window.setTimeout(() => setState("hidden"), removeAfter);
+    const removeTimer = window.setTimeout(() => {
+      document.documentElement.dataset.introDone = "true";
+      setState("hidden");
+    }, removeAfter);
 
     return () => {
       window.clearTimeout(leaveTimer);
