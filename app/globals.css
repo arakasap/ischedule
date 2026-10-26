@@ -243,6 +243,74 @@ html.theme-switching::before {
   box-shadow: 0 2px 4px color-mix(in srgb, var(--ink) 7%, transparent), 0 14px 28px color-mix(in srgb, var(--ink) 7%, transparent);
 }
 
+.filter-fields {
+  background: color-mix(in srgb, var(--surface) 94%, var(--bg));
+}
+
+section[aria-labelledby="filter-title"] > div:first-child {
+  position: relative;
+  overflow: hidden;
+}
+
+section[aria-labelledby="filter-title"] > div:first-child::after {
+  position: absolute;
+  right: 1.25rem;
+  bottom: -2.5rem;
+  width: 8rem;
+  height: 8rem;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--accent) 13%, transparent);
+  content: "";
+  pointer-events: none;
+}
+
+section[aria-labelledby="filter-title"] > div:first-child > * {
+  position: relative;
+  z-index: 1;
+}
+
+.filter-field label,
+.filter-segment > div > span {
+  color: var(--ink-2);
+  font-size: .72rem;
+  font-weight: 650;
+  letter-spacing: .01em;
+}
+
+.filter-select {
+  min-height: 2.75rem;
+  cursor: pointer;
+  transition: border-color 180ms ease, background-color 180ms ease, box-shadow 180ms ease;
+}
+
+.filter-select:hover {
+  border-color: color-mix(in srgb, var(--accent) 45%, var(--line));
+}
+
+.filter-select:focus-visible {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 18%, transparent);
+}
+
+.filter-segment {
+  padding-top: .15rem;
+}
+
+.filter-segment [role="group"] {
+  min-height: 2.75rem;
+  border-radius: .75rem;
+  box-shadow: inset 0 1px 2px color-mix(in srgb, var(--ink) 5%, transparent);
+}
+
+.filter-segment [role="group"] button {
+  min-height: 2.75rem;
+  transition: background-color 180ms ease, color 180ms ease, box-shadow 180ms ease;
+}
+
+.filter-segment [role="group"] button[aria-pressed="true"] {
+  box-shadow: 0 3px 10px color-mix(in srgb, var(--accent) 22%, transparent);
+}
+
 .countdown-card {
   position: relative;
   isolation: isolate;

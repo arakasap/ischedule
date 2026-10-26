@@ -25,7 +25,7 @@ import {
 import type { Dataset, ExamKind, ViewMode } from "@/lib/types";
 
 const selectClass =
-  "w-full min-w-0 rounded-md border border-line bg-bg px-2.5 py-2 text-ink focus-visible:outline-2 focus-visible:outline-accent";
+  "filter-select w-full min-w-0 rounded-xl border border-line bg-bg px-3 py-2.5 text-ink shadow-sm focus-visible:outline-2 focus-visible:outline-accent";
 
 function yearLabel(y: number) {
   return y === 0 ? "ไม่ระบุชั้นปี (0)" : `ชั้นปี ${y}`;
@@ -169,8 +169,8 @@ export function ExamApp() {
           <h2 id="filter-title" className="font-semibold">ค้นหาตารางสอบ</h2>
           <p className="mt-1 text-sm text-ink-2">เลือกข้อมูลของคุณเพื่อแสดงวิชาที่เกี่ยวข้อง</p>
         </div>
-        <div className="grid gap-3 p-4 sm:grid-cols-3 sm:p-5">
-        <div className="flex min-w-0 flex-col gap-1">
+        <div className="filter-fields grid gap-4 p-4 sm:grid-cols-3 sm:p-5">
+        <div className="filter-field flex min-w-0 flex-col gap-1.5">
           <label htmlFor="fac" className="text-xs font-medium tracking-wide text-ink-2">
             คณะ / หน่วยงาน
           </label>
@@ -182,7 +182,7 @@ export function ExamApp() {
             ))}
           </select>
         </div>
-        <div className="flex min-w-0 flex-col gap-1">
+        <div className="filter-field flex min-w-0 flex-col gap-1.5">
           <label htmlFor="cur" className="text-xs font-medium tracking-wide text-ink-2">
             หลักสูตรหรือสาขา
           </label>
@@ -195,7 +195,7 @@ export function ExamApp() {
             ))}
           </select>
         </div>
-        <div className="flex min-w-0 flex-col gap-1">
+        <div className="filter-field flex min-w-0 flex-col gap-1.5">
           <label htmlFor="yr" className="text-xs font-medium tracking-wide text-ink-2">
             ชั้นปี
           </label>
@@ -208,7 +208,7 @@ export function ExamApp() {
             ))}
           </select>
         </div>
-        <div className="sm:col-span-3">
+        <div className="filter-segment sm:col-span-3">
           <Segmented<ExamKind>
             label="การสอบ"
             value={kind}
@@ -219,7 +219,7 @@ export function ExamApp() {
             ]}
           />
         </div>
-        <div className="sm:col-span-3">
+        <div className="filter-segment sm:col-span-3">
           <Segmented<ViewMode>
             label="มุมมอง"
             value={view}
