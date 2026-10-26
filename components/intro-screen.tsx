@@ -15,6 +15,7 @@ export function IntroScreen() {
     const leaveTimer = window.setTimeout(() => setState("leaving"), leaveAfter);
     const removeTimer = window.setTimeout(() => {
       document.documentElement.dataset.introDone = "true";
+      document.documentElement.dataset.countdownStage = "spotlight";
       window.dispatchEvent(new Event("intro-complete"));
       setState("hidden");
     }, removeAfter);
