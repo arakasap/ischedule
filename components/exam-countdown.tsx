@@ -114,19 +114,19 @@ export function ExamCountdown({ groups }: Props) {
 
   return (
     <section ref={cardRef} aria-label="นับถอยหลังวิชาที่จะสอบถัดไป" className="countdown-card surface-lift overflow-hidden rounded-2xl border border-accent/30 bg-accent px-4 py-5 text-accent-ink sm:px-6 sm:py-6">
-      <div className="flex flex-col items-center text-center">
+      <div className="countdown-card-content relative flex flex-col items-center text-center">
         <p className="text-sm font-medium tracking-wide opacity-90">เหลือเวลาอ่านหนังสืออีก</p>
-        <div className="mt-3 grid w-full max-w-2xl grid-cols-4 gap-1.5 sm:gap-3" aria-live="polite">
+        <div className="countdown-card-timer mt-4 grid w-full max-w-2xl grid-cols-4 gap-1.5 sm:gap-3" aria-live="polite" aria-atomic="true">
           {blocks.map(([value, label]) => (
-            <div key={label} className="countdown-unit rounded-xl bg-black/10 px-1 py-2.5 sm:px-3 sm:py-3">
-              <strong className="block font-mono text-2xl font-semibold tabular-nums tracking-tight sm:text-4xl">{value}</strong>
-              <span className="mt-0.5 block text-[0.65rem] font-medium opacity-80 sm:text-xs">{label}</span>
+            <div key={label} className="countdown-unit rounded-xl border border-white/10 bg-black/10 px-1 py-2.5 shadow-sm sm:px-3 sm:py-3.5">
+              <strong className="block font-mono text-[1.65rem] font-semibold leading-none tabular-nums tracking-tight sm:text-4xl">{value}</strong>
+              <span className="mt-1 block text-[0.65rem] font-medium opacity-80 sm:text-xs">{label}</span>
             </div>
           ))}
         </div>
-        <div className="mt-4 max-w-2xl">
+        <div className="countdown-card-details mt-4 w-full max-w-2xl rounded-xl border border-white/15 bg-black/10 px-3 py-3 text-left sm:mt-5 sm:px-4">
           <p className="font-mono text-xs font-medium opacity-85">{upcoming.group.code} · {upcoming.group.info.label}</p>
-          <h2 className="mt-1 text-lg font-bold leading-tight sm:text-xl">{upcoming.group.name}</h2>
+          <h2 className="mt-1.5 break-words text-base font-bold leading-snug sm:text-xl">{upcoming.group.name}</h2>
           <p className="mt-1 text-xs opacity-85">{DOW[p.dow]} {thaiDate(upcoming.group.info.date)} · กลุ่ม {sectionsOf(upcoming.group)}</p>
         </div>
       </div>
