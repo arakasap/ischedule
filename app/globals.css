@@ -358,6 +358,18 @@ html.theme-switching::before {
   opacity: 1;
 }
 
+.page-content > .countdown-card.countdown-spotlight-flight {
+  animation: countdown-center-in 520ms cubic-bezier(.16, 1, .3, 1) both;
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.page-content > .countdown-card.countdown-spotlight-flight.countdown-spotlight-return {
+  animation: none;
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(.98);
+}
+
 .page-content > .countdown-card.countdown-card-reveal {
   animation: none;
   opacity: 0;
