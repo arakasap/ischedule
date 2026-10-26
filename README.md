@@ -1,59 +1,125 @@
-# KMITL Exam Table
+# `<i>schedule`
 
-เว็บดูตารางสอบกลางภาค/ปลายภาคของ KMITL เลือกคณะ หลักสูตร ชั้นปี แล้วได้ตารางตามเวลา (หรือมุมมองรายการ) ข้อมูลมาจากระบบ REG ภาค 1/2569
+ตารางสอบ KMITL ที่ช่วยให้การวางแผนอ่านหนังสือเป็นเรื่องง่ายขึ้น
 
-Stack ตามรีโป ihelp: **Next.js 16 (App Router) · React 19 · TypeScript 5 · Tailwind CSS 4 · Bun** พร้อมดีพลอยบน Vercel
+`<i>schedule` คือเว็บแอปสำหรับค้นหาและดูตารางสอบแบบเข้าใจง่าย รองรับทั้งมุมมองรายการและไทม์ไลน์ พร้อมนับถอยหลังสู่วิชาถัดไป เพื่อให้รู้ว่ามีเวลาเตรียมตัวเหลือเท่าไรในแต่ละช่วง
 
-เฟสแรกนี้ **ไม่มีฐานข้อมูล** ข้อมูลตารางสอบเป็นไฟล์ `public/data/exams.json` (ประมาณ 5,000 แถว) ที่เว็บโหลดไปกรองในเบราว์เซอร์
+## จุดเด่น
 
-## เริ่มใช้งาน
+- กรองตารางสอบตามคณะ หลักสูตร ชั้นปี และประเภทการสอบ
+- ดูตารางได้ 2 แบบ: รายการและไทม์ไลน์
+- Countdown ไปยังการสอบครั้งถัดไปแบบเรียลไทม์
+- แสดงประเภทการสอบอย่างชัดเจน: `(ท)` ทฤษฎี และ `(ป)` ปฏิบัติ
+- ตารางบนมือถือและ iPad เปลี่ยนเป็นการ์ดที่อ่านง่าย พร้อมเลื่อนดู timeline ได้สะดวก
+- Dark mode พร้อม animation ที่นุ่มนวล
+- Navbar แบบ sticky ที่ย่อเป็น floating pill เมื่อเลื่อนหน้า
+- แชร์ลิงก์ผลการค้นหาผ่าน URL ได้ทันที
+- มี loading screen และรองรับ `prefers-reduced-motion`
+
+## เทคโนโลยี
+
+| ส่วน | เทคโนโลยี |
+| --- | --- |
+| Framework | Next.js 16 · App Router |
+| UI | React 19 · TypeScript 5 |
+| Styling | Tailwind CSS 4 · CSS Variables |
+| Data | Static JSON snapshot |
+| Runtime | Node.js หรือ Bun |
+
+## เริ่มต้นใช้งาน
+
+ต้องใช้ Node.js 20+ หรือ Bun เวอร์ชันปัจจุบัน
+
+```bash
+# ติดตั้ง dependencies
+npm install
+
+# เปิด development server
+npm run dev
+```
+
+เปิด [http://localhost:3000](http://localhost:3000) ในเบราว์เซอร์
+
+ถ้าใช้ Bun:
 
 ```bash
 bun install
-bun run dev          # เปิด http://localhost:3000
+bun run dev
 ```
 
-ในแพ็กเกจมี `public/data/exams.json` ที่แปลงจาก CSV ภาค 1/2569 ให้แล้ว เปิดดูได้ทันที ถ้าใช้ npm แทน bun ก็ได้ (`npm install` / `npm run dev`)
+## คำสั่งที่ใช้บ่อย
 
-## อัปเดตข้อมูล
-
-มี 2 ทาง
-
-1. **ส่งออก CSV ด้วย userscript แล้วแปลง** (ทางที่ทดสอบแล้วว่าใช้ได้)
-   - ติดตั้ง `kmitl-exam-api.user.js` (v0.7 ขึ้นไป จะมีรหัสคณะ/แผนก/หลักสูตรใน CSV) ใน Tampermonkey
-   - เปิดหน้า REG กด "ตารางสอบ" แล้วโหลดทุกคณะ จากนั้นกด CSV
-   - วางไฟล์ที่ `data/source/kmitl-teach-table.csv` แล้วรัน `bun run data:csv` (หรือ `bun run data:csv พาธไฟล์.csv 1/2569`)
-2. **ดึงตรงจาก REG ด้วยสคริปต์** `bun run data:sync` (ตั้ง `YEAR` `SEM` `LEVEL` ได้)
-   - พอร์ตตรรกะมาจาก userscript แต่ **ยังไม่ได้ทดสอบกับ API จริง** เพราะ API ตอบเฉพาะเบราว์เซอร์ที่เปิดหน้า REG อาจใช้ไม่ได้จากเซิร์ฟเวอร์
-   - มีตัวกันข้อมูลผิดปกติ ถ้าได้ต่ำกว่า `MIN_ROWS` แถว จะไม่เขียนทับไฟล์เดิม
-
-## โครงสร้าง
-
-```
-app/                 หน้าเว็บและ layout (Tailwind 4)
-components/          exam-app (ตัวกรอง + state), timetable-grid, exam-list, segmented
-lib/types.ts         ชนิดข้อมูล Offering / Dataset
-lib/exam-utils.ts    จัดกลุ่มวิชาตามวันสอบ จัดบรรทัดเวลาทับกัน ตัวเลือกตัวกรอง
-scripts/             csv-to-json.ts, sync-reg.ts
-data/source/         CSV ต้นทาง
-public/data/         exams.json ที่เว็บโหลด
+```bash
+npm run dev        # เปิด development server
+npm run typecheck  # ตรวจสอบ TypeScript
+npm run build      # สร้าง production build
+npm run start      # รัน production server
 ```
 
-ตัวเลือกที่เลือกถูกเก็บใน URL (`?f=...&c=...&y=1&k=final&v=grid`) ส่งลิงก์ต่อให้เพื่อนได้
+## การอัปเดตข้อมูลตารางสอบ
 
-## ดีพลอย (Vercel)
+ข้อมูลที่หน้าเว็บใช้ถูกเก็บไว้ที่ [`public/data/exams.json`](./public/data/exams.json)
 
-ผูกรีโปกับ Vercel ใช้ค่าเริ่มต้นได้เลย ไม่ต้องตั้งตัวแปรสภาพแวดล้อม ถ้าจะอัปเดตข้อมูลอัตโนมัติให้รันสคริปต์ sync ตามเวลา (เช่น GitHub Actions วันละ 1-2 ครั้ง) แล้ว commit `exams.json` Vercel จะ build ใหม่เอง
-อย่าลืมว่าการเข้า REG จาก GitHub Actions อาจถูกบล็อก ต้องทดสอบก่อน
+### แปลง CSV เป็น JSON
 
-## เมื่อไหร่ต้องเพิ่มฐานข้อมูล
+วางไฟล์ CSV ไว้ที่ [`data/source/`](./data/source/) แล้วรัน:
 
-ตอนมีข้อมูลรายบุคคล เช่น ล็อกอินด้วยบัญชี `@kmitl.ac.th`, เก็บวิชาที่ลงจริง, แจ้งเตือนเมื่อวันสอบเปลี่ยน ให้เพิ่ม Supabase (Auth) + Drizzle ORM ตามที่ ihelp ใช้ และเก็บเฉพาะข้อมูลส่วนบุคคลไว้ที่นั่น ตรวจสิทธิ์ฝั่งเซิร์ฟเวอร์ ส่วนตารางสอบสาธารณะยังเป็นไฟล์เหมือนเดิม **อย่าฝังข้อมูลรายคนไว้ในโค้ดฝั่งไคลเอนต์** (PDPA)
+```bash
+npm run data:csv
+```
 
-## ข้อจำกัดที่ควรรู้
+หรือระบุไฟล์และภาคการศึกษาเอง:
 
-- หน้าเว็บแสดง **ทุกวิชาที่เปิดให้หลักสูตร/ชั้นปีนั้น** ไม่ใช่วิชาที่ลงทะเบียนจริง วิชาเลือกเสรีหรือวิชาที่เปิดให้หลายหลักสูตรอาจไม่ขึ้น
-- ไม่มีห้องสอบ/ที่นั่งสอบรายคน (REG ไม่มีข้อมูลนี้)
-- ข้อมูลเป็นภาพนิ่ง ณ วันที่ดึง และ API ของ REG เป็น API ภายใน ควรขออนุญาตสำนักทะเบียนหรือศูนย์คอมพิวเตอร์ก่อนเปิดให้คนทั้งมหาลัยใช้ ระบุแหล่งที่มา และให้ผู้ใช้ยืนยันวันสอบกับ REG เสมอ
-- ตัวเลือก "สาขา" ตอนนี้คือคอลัมน์หลักสูตร CSV รุ่นเก่ายังไม่มีรหัสแผนก ถ้านำเข้าจาก userscript v0.7 ขึ้นไปจะมี `deptId` ในข้อมูลให้ใช้ต่อยอดตัวกรองสาขา
-- ห้ามนำรายชื่อนักศึกษาหรือผังที่นั่งจาก ihelp มาใช้โดยไม่ได้รับอนุญาต (โปรเจกต์นี้ใช้เฉพาะ stack ไม่ได้ใช้ข้อมูลของ ihelp)
+```bash
+bun run data:csv path/to/exams.csv 1/2569
+```
+
+### ซิงก์ข้อมูลจากแหล่งข้อมูลภายนอก
+
+```bash
+npm run data:sync
+```
+
+สามารถกำหนดค่า `YEAR`, `SEM` และ `LEVEL` ตามการตั้งค่าของสคริปต์ได้
+
+> ตรวจสอบข้อมูลก่อน commit ทุกครั้ง เพราะตารางสอบเป็นข้อมูลที่อาจเปลี่ยนแปลงได้
+
+## โครงสร้างโปรเจกต์
+
+```text
+app/                  หน้าเว็บหลัก, metadata และ global styles
+components/           Navbar, theme toggle, countdown และส่วนแสดงตาราง
+lib/                  types และ utility สำหรับจัดกลุ่มข้อมูลการสอบ
+data/source/          ไฟล์ CSV ต้นทาง
+public/data/          JSON ที่หน้าเว็บโหลดไปใช้งาน
+public/                static assets เช่น favicon
+scripts/               เครื่องมือแปลงและซิงก์ข้อมูล
+```
+
+## รูปแบบ URL
+
+ตัวกรองและมุมมองปัจจุบันจะถูกเก็บไว้ใน query string ทำให้คัดลอกหรือแชร์ลิงก์ได้ เช่น:
+
+```text
+/?f=คณะ&c=หลักสูตร&y=1&k=final&v=grid
+```
+
+## การเผยแพร่
+
+โปรเจกต์นี้สามารถ deploy บนแพลตฟอร์มที่รองรับ Next.js ได้ เช่น Vercel โดยใช้คำสั่ง build มาตรฐาน:
+
+```bash
+npm run build
+npm run start
+```
+
+## ผู้พัฒนา
+
+สร้างโดย [arakasap](https://github.com/arakasap)
+
+- GitHub: [github.com/arakasap](https://github.com/arakasap)
+- Instagram: [@arakasap](https://instagram.com/arakasap)
+
+---
+
+<p align="center">Made for clearer exam planning · <code>&lt;i&gt;schedule</code></p>
