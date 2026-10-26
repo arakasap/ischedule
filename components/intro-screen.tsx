@@ -53,8 +53,8 @@ export function IntroScreen() {
       aria-live="polite"
       aria-label="กำลังเปิด <i>schedule"
     >
-      <div className="intro-glow intro-glow-one" />
-      <div className="intro-glow intro-glow-two" />
+      <div className="intro-glow intro-glow-one" aria-hidden="true" />
+      <div className="intro-glow intro-glow-two" aria-hidden="true" />
       <div className="intro-content">
         <div className="intro-mark" aria-hidden="true">i</div>
         <p className="intro-title">&lt;i&gt;schedule</p>
