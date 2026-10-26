@@ -347,6 +347,12 @@ html.theme-switching::before {
 .page-content > *:nth-child(4) { animation-delay: 170ms; }
 .page-content > *:nth-child(5) { animation-delay: 220ms; }
 
+/* The countdown owns its entrance sequence; keep the page stagger from hiding it. */
+.page-content > .countdown-card {
+  animation: none;
+  opacity: 1;
+}
+
 a,
 button,
 select,
