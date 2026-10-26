@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { type ExamGroup, DOW, dateParts, sectionsOf, thaiDate } from "@/lib/exam-utils";
 
 interface Props {
@@ -45,15 +45,50 @@ function formatCountdown(milliseconds: number): { days: string; hours: string; m
 
 export function ExamCountdown({ groups }: Props) {
   const [now, setNow] = useState(() => new Date());
+  const cardRef = useRef<HTMLElement>(null);
   useEffect(() => {
     const timer = window.setInterval(() => setNow(new Date()), 1000);
     return () => window.clearInterval(timer);
   }, []);
 
+  useEffect(() => {
+    let cleanupTimer: number | undefined;
+
+    function spotlightCountdown() {
+      const card = cardRef.current;
+      if (!card || card.classList.contains("countdown-spotlight-flight")) return;
+
+      const target = card.getBoundingClientRect();
+      card.style.setProperty("--countdown-target-top", `${target.top}px`);
+      card.style.setProperty("--countdown-target-left", `${target.left}px`);
+      card.style.setProperty("--countdown-target-width", `${target.width}px`);
+      card.classList.add("countdown-spotlight-flight");
+
+      window.requestAnimationFrame(() => {
+        window.requestAnimationFrame(() => card.classList.add("countdown-spotlight-return"));
+      });
+
+      cleanupTimer = window.setTimeout(() => {
+        card.classList.remove("countdown-spotlight-flight", "countdown-spotlight-return");
+        card.style.removeProperty("--countdown-target-top");
+        card.style.removeProperty("--countdown-target-left");
+        card.style.removeProperty("--countdown-target-width");
+      }, 1100);
+    }
+
+    window.addEventListener("intro-complete", spotlightCountdown);
+    if (document.documentElement.dataset.introDone === "true") spotlightCountdown();
+
+    return () => {
+      window.removeEventListener("intro-complete", spotlightCountdown);
+      if (cleanupTimer) window.clearTimeout(cleanupTimer);
+    };
+  }, []);
+
   const upcoming = useMemo(() => findUpcoming(groups, now), [groups, now]);
   if (!upcoming) {
     return (
-      <section aria-label="สถานะการสอบ" className="countdown-card surface-lift rounded-2xl border border-accent/30 bg-accent px-4 py-6 text-center text-accent-ink sm:px-6">
+      <section ref={cardRef} aria-label="สถานะการสอบ" className="countdown-card surface-lift rounded-2xl border border-accent/30 bg-accent px-4 py-6 text-center text-accent-ink sm:px-6">
         <p className="text-sm font-medium opacity-85">ตารางสอบที่เลือก</p>
         <p className="mt-1 text-2xl font-bold">สอบครบทุกวิชาแล้ว</p>
       </section>
@@ -70,7 +105,7 @@ export function ExamCountdown({ groups }: Props) {
   ];
 
   return (
-    <section aria-label="นับถอยหลังวิชาที่จะสอบถัดไป" className="countdown-card surface-lift overflow-hidden rounded-2xl border border-accent/30 bg-accent px-4 py-5 text-accent-ink sm:px-6 sm:py-6">
+    <section ref={cardRef} aria-label="นับถอยหลังวิชาที่จะสอบถัดไป" className="countdown-card surface-lift overflow-hidden rounded-2xl border border-accent/30 bg-accent px-4 py-5 text-accent-ink sm:px-6 sm:py-6">
       <div className="flex flex-col items-center text-center">
         <p className="text-sm font-medium tracking-wide opacity-90">เหลือเวลาอ่านหนังสืออีก</p>
         <div className="mt-3 grid w-full max-w-2xl grid-cols-4 gap-1.5 sm:gap-3" aria-live="polite">
