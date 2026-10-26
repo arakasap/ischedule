@@ -53,33 +53,32 @@ export function ExamCountdown({ groups }: Props) {
 
   useEffect(() => {
     let returnTimer: number | undefined;
+    let revealTimer: number | undefined;
     let cleanupTimer: number | undefined;
 
     function spotlightCountdown() {
       const card = cardRef.current;
       if (!card || card.classList.contains("countdown-spotlight-flight")) return;
 
-      const target = card.getBoundingClientRect();
       const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
       const centerPause = reducedMotion ? 80 : 1150;
       document.documentElement.dataset.countdownStage = "spotlight";
-      card.style.setProperty("--countdown-target-top", `${target.top}px`);
-      card.style.setProperty("--countdown-target-left", `${target.left}px`);
-      card.style.setProperty("--countdown-target-width", `${target.width}px`);
+      card.style.setProperty("--countdown-target-width", `${card.getBoundingClientRect().width}px`);
       card.classList.add("countdown-spotlight-flight");
 
       returnTimer = window.setTimeout(() => {
         document.documentElement.dataset.countdownStage = "returning";
-        window.requestAnimationFrame(() => card.classList.add("countdown-spotlight-return"));
+        card.classList.add("countdown-spotlight-return");
       }, centerPause);
 
       cleanupTimer = window.setTimeout(() => {
         card.classList.remove("countdown-spotlight-flight", "countdown-spotlight-return");
-        card.style.removeProperty("--countdown-target-top");
-        card.style.removeProperty("--countdown-target-left");
         card.style.removeProperty("--countdown-target-width");
+        card.classList.add("countdown-card-reveal");
+        window.requestAnimationFrame(() => card.classList.add("countdown-card-reveal-visible"));
         document.documentElement.dataset.countdownStage = "complete";
-      }, centerPause + 950);
+        revealTimer = window.setTimeout(() => card.classList.remove("countdown-card-reveal", "countdown-card-reveal-visible"), 500);
+      }, centerPause + 360);
     }
 
     window.addEventListener("intro-complete", spotlightCountdown);
@@ -88,6 +87,7 @@ export function ExamCountdown({ groups }: Props) {
     return () => {
       window.removeEventListener("intro-complete", spotlightCountdown);
       if (returnTimer) window.clearTimeout(returnTimer);
+      if (revealTimer) window.clearTimeout(revealTimer);
       if (cleanupTimer) window.clearTimeout(cleanupTimer);
     };
   }, []);
