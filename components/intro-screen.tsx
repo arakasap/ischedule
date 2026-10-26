@@ -12,10 +12,12 @@ export function IntroScreen() {
     const leaveAfter = reducedMotion ? 120 : 1150;
     const removeAfter = reducedMotion ? 180 : 1650;
 
-    const leaveTimer = window.setTimeout(() => setState("leaving"), leaveAfter);
+    const leaveTimer = window.setTimeout(() => {
+      document.documentElement.dataset.countdownStage = "spotlight";
+      setState("leaving");
+    }, leaveAfter);
     const removeTimer = window.setTimeout(() => {
       document.documentElement.dataset.introDone = "true";
-      document.documentElement.dataset.countdownStage = "spotlight";
       window.dispatchEvent(new Event("intro-complete"));
       setState("hidden");
     }, removeAfter);
