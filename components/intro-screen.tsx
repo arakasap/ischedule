@@ -1,11 +1,26 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 
 type IntroState = "visible" | "leaving" | "hidden";
 
 export function IntroScreen() {
   const [state, setState] = useState<IntroState>("visible");
+
+  useLayoutEffect(() => {
+    const previousRestoration = window.history.scrollRestoration;
+    window.history.scrollRestoration = "manual";
+    window.scrollTo(0, 0);
+
+    const resetScroll = window.requestAnimationFrame(() => window.scrollTo(0, 0));
+    const resetTimer = window.setTimeout(() => window.scrollTo(0, 0), 0);
+
+    return () => {
+      window.cancelAnimationFrame(resetScroll);
+      window.clearTimeout(resetTimer);
+      window.history.scrollRestoration = previousRestoration;
+    };
+  }, []);
 
   useEffect(() => {
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -13,6 +28,7 @@ export function IntroScreen() {
     const removeAfter = reducedMotion ? 180 : 1650;
 
     const leaveTimer = window.setTimeout(() => {
+      window.scrollTo(0, 0);
       document.documentElement.dataset.countdownStage = "spotlight";
       setState("leaving");
     }, leaveAfter);
