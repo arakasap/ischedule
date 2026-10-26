@@ -61,7 +61,8 @@ export function ExamCountdown({ groups }: Props) {
       if (!card || card.classList.contains("countdown-spotlight-flight")) return;
 
       const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-      const centerPause = reducedMotion ? 80 : 1150;
+      // Keep the spotlight on screen long enough to read the subject and exam time.
+      const centerPause = reducedMotion ? 1400 : 2600;
       document.documentElement.dataset.countdownStage = "spotlight";
       card.style.setProperty("--countdown-target-width", `${card.getBoundingClientRect().width}px`);
       card.classList.add("countdown-spotlight-flight");
