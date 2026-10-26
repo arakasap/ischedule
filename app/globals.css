@@ -353,6 +353,38 @@ html.theme-switching::before {
   opacity: 1;
 }
 
+html[data-countdown-stage="spotlight"] .site-nav,
+html[data-countdown-stage="spotlight"] .page-footer,
+html[data-countdown-stage="spotlight"] .page-content > *:not(.countdown-card) {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  animation: none;
+}
+
+html[data-countdown-stage="returning"] .site-nav,
+html[data-countdown-stage="returning"] .page-footer,
+html[data-countdown-stage="returning"] .page-content > *:not(.countdown-card) {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  animation: none;
+}
+
+html[data-countdown-stage="complete"] .site-nav,
+html[data-countdown-stage="complete"] .page-footer,
+html[data-countdown-stage="complete"] .page-content > * {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  animation: none;
+}
+
+html[data-countdown-stage="spotlight"] .page-content,
+html[data-countdown-stage="returning"] .page-content {
+  transition: opacity 350ms ease;
+}
+
 a,
 button,
 select,
