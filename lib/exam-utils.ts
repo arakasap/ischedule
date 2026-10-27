@@ -171,8 +171,9 @@ export function layoutLanes(list: ExamGroup[]): { items: { group: ExamGroup; lan
   return { items, laneCount: Math.max(1, laneEnds.length) };
 }
 
-// ใช้เฉดส้ม/amber ให้สอดคล้องกับ brand และเข้มพอสำหรับตัวอักษรสีขาวบนตาราง
-const PALETTE = ["#c2410c", "#b45309", "#9a3412", "#ea580c", "#a16207", "#9f1239", "#7c2d12", "#d97706", "#92400e", "#c2410c"];
+// สีประจำวิชา: โทน warm ที่เข้ากับแบรนด์ แต่แยกแต่ละวิชาได้ชัดบนพื้น light
+// และเข้มพอให้ตัวอักษรสีขาวอ่านได้ในทั้งสองธีม
+const PALETTE = ["#c2410c", "#b45309", "#9f1239", "#0369a1", "#047857", "#6d28d9", "#be123c", "#0f766e", "#7c3aed", "#92400e"];
 
 /** สีประจำวิชา (ขาวบนสีเหล่านี้อ่านได้ทั้งโหมดสว่างและมืด) */
 export function colorFor(code: string): string {

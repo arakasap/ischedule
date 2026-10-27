@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { IntroScreen } from "@/components/intro-screen";
 import { AuthProvider } from "@/components/auth-provider";
+import { LanguageProvider } from "@/components/language-provider";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -30,8 +31,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body suppressHydrationWarning>
-        <IntroScreen />
-        <AuthProvider>{children}</AuthProvider>
+        <LanguageProvider>
+          <IntroScreen />
+          <AuthProvider>{children}</AuthProvider>
+        </LanguageProvider>
       </body>
     </html>
   );

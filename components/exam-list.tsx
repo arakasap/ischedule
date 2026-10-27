@@ -26,7 +26,7 @@ export function ExamList({ byDate }: Props) {
                 </span>
                 <span className="max-w-[150px] break-words text-right font-mono text-sm text-ink-2">กลุ่ม {sectionsOf(g)}</span>
               </summary>
-              <div className="overflow-x-auto overscroll-x-contain bg-bg px-3.5 pb-3 pt-1">
+              <div className="scrollable-table overflow-x-auto overscroll-x-contain bg-bg px-3.5 pb-3 pt-1">
                 <table className="w-full min-w-[620px] border-collapse text-[0.85rem]">
                   <thead>
                     <tr className="text-left text-ink-2">

@@ -1,20 +1,25 @@
 "use client";
 
 import { useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { ExamApp } from "@/components/exam-app";
 import { SiteNav } from "@/components/site-nav";
 import { useAuth } from "@/components/auth-provider";
+import { useLanguage } from "@/components/language-provider";
 
 export default function Home() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { user, loading } = useAuth();
+  const { language } = useLanguage();
+  const english = language === "en";
+  const openedFromScheduleLink = searchParams.get("view") === "schedule";
 
   useEffect(() => {
-    if (!loading && user) router.replace("/my");
-  }, [loading, router, user]);
+    if (!loading && user && !openedFromScheduleLink) router.replace("/my");
+  }, [loading, openedFromScheduleLink, router, user]);
 
-  if (loading || user) return null;
+  if (loading || (user && !openedFromScheduleLink)) return null;
 
   return (
     <div className="min-h-screen">
@@ -25,17 +30,17 @@ export default function Home() {
         <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-2xl bg-accent text-xl font-bold text-accent-ink shadow-sm">
           i
         </div>
-        <p className="text-sm font-medium text-accent">&lt;i&gt;schedule · สำหรับนักศึกษา IT KMITL</p>
-        <h1 className="mt-1 text-2xl font-bold leading-tight text-balance sm:text-4xl">ตารางสอบ &amp; ผังเวลาสอบ</h1>
+        <p className="text-sm font-medium text-accent">&lt;i&gt;schedule · {english ? "For IT KMITL students" : "สำหรับนักศึกษา IT KMITL"}</p>
+        <h1 className="mt-1 text-2xl font-bold leading-tight text-balance sm:text-4xl">{english ? "Exam schedule & timeline" : "ตารางสอบ & ผังเวลาสอบ"}</h1>
         <p className="mx-auto mt-2 max-w-2xl text-sm leading-6 text-ink-2 sm:text-base">
-          ค้นหากำหนดการสอบกลางภาคและปลายภาค แยกตามคณะ หลักสูตร และชั้นปี แล้วดูภาพรวมตารางสอบได้ในหน้าเดียว
+          {english ? "Find midterm and final exam dates by faculty, curriculum, and year, then view the full schedule in one place." : "ค้นหากำหนดการสอบกลางภาคและปลายภาค แยกตามคณะ หลักสูตร และชั้นปี แล้วดูภาพรวมตารางสอบได้ในหน้าเดียว"}
         </p>
       </header>
       <ExamApp />
     </main>
       <footer className="page-footer border-t border-line bg-surface px-4 py-6 text-center text-xs leading-5 text-ink-2">
         <div className="mx-auto flex max-w-5xl flex-col items-center gap-2 sm:flex-row sm:justify-between">
-          <p>Built for IT KMITL · © 2026 &lt;i&gt;schedule</p>
+          <p>{english ? "Built for IT KMITL · © 2026" : "สร้างสำหรับ IT KMITL · © 2026"} &lt;i&gt;schedule</p>
           <div className="flex flex-wrap justify-center gap-2">
             <a
               href="https://github.com/arakasap"

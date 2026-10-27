@@ -62,10 +62,13 @@ export function TimetableGrid({ groups, byDate, banner }: Props) {
               </div>
               <div className="space-y-2">
                 {list.map((group) => (
-                  <article key={group.key} className="rounded-xl border border-line bg-bg p-3" style={{ borderLeft: `4px solid ${colorFor(group.code)}` }}>
+                  <article key={group.key} className="rounded-xl border border-line bg-bg p-3">
                     <div className="flex items-start justify-between gap-3">
                       <div className="min-w-0">
-                        <div className="font-mono text-xs font-medium text-accent">{group.code}</div>
+                        <div className="flex items-center gap-2 font-mono text-xs font-medium text-accent">
+                          <span aria-hidden="true" className="h-2 w-2 shrink-0 rounded-full" style={{ backgroundColor: colorFor(group.code) }} />
+                          {group.code}
+                        </div>
                         <h3 className="mt-0.5 break-words text-sm font-semibold leading-5">{group.name}</h3>
                       </div>
                       <time className="shrink-0 rounded-md bg-surface px-2 py-1 font-mono text-xs font-medium tabular-nums">{group.info.label}</time>
@@ -87,7 +90,12 @@ export function TimetableGrid({ groups, byDate, banner }: Props) {
           ตารางเต็มตามช่วงเวลา
         </div>
       </div>
-      <div className="block overflow-x-auto overscroll-x-contain touch-pan-x">
+      <div
+        aria-label="เลื่อนตารางสอบซ้ายขวา"
+        className="timetable-scroll block min-w-0 overflow-x-auto overscroll-x-contain"
+        role="region"
+        tabIndex={0}
+      >
         <div style={{ minWidth: LABEL_W + hours * HOUR_W }}>
           <div className="grid border-b border-line bg-bg" style={{ gridTemplateColumns: `${LABEL_W}px minmax(0,1fr)` }}>
             <div className="sticky left-0 z-20 border-r border-line bg-bg px-2 py-2 text-[0.65rem] font-medium text-ink-2">วันสอบ</div>
@@ -125,7 +133,7 @@ export function TimetableGrid({ groups, byDate, banner }: Props) {
                       <div
                         key={group.key}
                         title={tip}
-                        className="absolute flex flex-col justify-between overflow-hidden rounded-lg border border-white/20 px-1.5 py-[4px] text-[0.7rem] leading-tight text-white shadow-md transition-transform hover:z-20 hover:scale-[1.02]"
+                        className="timetable-subject absolute flex flex-col justify-between overflow-hidden rounded-lg border border-white/20 px-1.5 py-[4px] text-[0.7rem] leading-tight text-white shadow-md transition-transform hover:z-20 hover:scale-[1.02]"
                         style={{
                           left: `${left}%`,
                           width: `calc(${width}% - 3px)`,

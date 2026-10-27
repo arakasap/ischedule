@@ -1,6 +1,7 @@
 "use client";
 
 import { useAuth } from "@/components/auth-provider";
+import { useLanguage } from "@/components/language-provider";
 
 function GoogleIcon() {
   return (
@@ -15,8 +16,10 @@ function GoogleIcon() {
 
 export function AuthButton() {
   const { user, loading, configured, signInWithGoogle, signOut } = useAuth();
-  if (loading) return <span className="hidden text-xs text-ink-2 sm:inline">กำลังตรวจสอบบัญชี...</span>;
-  if (!configured) return <button type="button" onClick={() => void signInWithGoogle()} className="rounded-lg border border-line px-2.5 py-1.5 text-xs font-medium text-ink-2 hover:border-accent hover:text-accent sm:px-3 sm:text-sm">ตั้งค่า Login</button>;
-  if (!user) return <button type="button" onClick={() => void signInWithGoogle()} className="inline-flex items-center gap-2 rounded-lg bg-surface px-2.5 py-1.5 text-xs font-semibold text-ink shadow-sm ring-1 ring-line transition hover:ring-accent sm:px-3 sm:text-sm"><GoogleIcon />เข้าสู่ระบบ Google</button>;
-  return <button type="button" onClick={() => void signOut()} title={user.email ?? "บัญชี KMITL"} className="rounded-lg border border-line px-2.5 py-1.5 text-xs font-medium text-ink-2 hover:border-accent hover:text-accent sm:px-3 sm:text-sm">ออกจากระบบ</button>;
+  const { language } = useLanguage();
+  const english = language === "en";
+  if (loading) return <span className="hidden text-xs text-ink-2 sm:inline">{english ? "Checking account…" : "กำลังตรวจสอบบัญชี..."}</span>;
+  if (!configured) return <button type="button" onClick={() => void signInWithGoogle()} className="nav-action-button rounded-xl border border-line px-3 py-2 text-xs font-medium text-ink-2 hover:border-accent hover:text-accent sm:text-sm">{english ? "Configure login" : "ตั้งค่า Login"}</button>;
+  if (!user) return <button type="button" onClick={() => void signInWithGoogle()} aria-label={english ? "Sign in with Google" : "เข้าสู่ระบบ Google"} title={english ? "Sign in with Google" : "เข้าสู่ระบบ Google"} className="google-auth-button nav-action-button inline-flex items-center gap-2 rounded-xl bg-surface px-3 py-2 text-xs font-semibold text-ink shadow-sm ring-1 ring-line transition hover:ring-accent sm:text-sm"><GoogleIcon /><span>{english ? "Sign in with Google" : "เข้าสู่ระบบ Google"}</span></button>;
+  return <button type="button" onClick={() => void signOut()} title={user.email ?? (english ? "KMITL account" : "บัญชี KMITL")} className="nav-action-button rounded-xl border border-line px-3 py-2 text-xs font-medium text-ink-2 hover:border-accent hover:text-accent sm:text-sm">{english ? "Sign out" : "ออกจากระบบ"}</button>;
 }

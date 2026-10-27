@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { ExamList } from "@/components/exam-list";
+import { useLanguage } from "@/components/language-provider";
 import { ExamCountdown } from "@/components/exam-countdown";
 import { Segmented } from "@/components/segmented";
 import { TimetableGrid } from "@/components/timetable-grid";
@@ -32,6 +33,8 @@ function yearLabel(y: number) {
 }
 
 export function ExamApp() {
+  const { language } = useLanguage();
+  const english = language === "en";
   const [data, setData] = useState<Dataset | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [faculty, setFaculty] = useState("");
@@ -166,13 +169,13 @@ export function ExamApp() {
     <>
       <section aria-labelledby="filter-title" className="surface-lift overflow-hidden rounded-2xl border border-line bg-surface">
         <div className="border-b border-line bg-accent-soft px-4 py-4 sm:px-5">
-          <h2 id="filter-title" className="font-semibold">ค้นหาตารางสอบ</h2>
-          <p className="mt-1 text-sm text-ink-2">เลือกข้อมูลของคุณเพื่อแสดงวิชาที่เกี่ยวข้อง</p>
+          <h2 id="filter-title" className="font-semibold">{english ? "Find an exam schedule" : "ค้นหาตารางสอบ"}</h2>
+          <p className="mt-1 text-sm text-ink-2">{english ? "Choose your details to show relevant subjects" : "เลือกข้อมูลของคุณเพื่อแสดงวิชาที่เกี่ยวข้อง"}</p>
         </div>
         <div className="filter-fields grid gap-4 p-4 sm:grid-cols-3 sm:p-5">
         <div className="filter-field flex min-w-0 flex-col gap-1.5">
           <label htmlFor="fac" className="text-xs font-medium tracking-wide text-ink-2">
-            คณะ / หน่วยงาน
+            {english ? "Faculty / unit" : "คณะ / หน่วยงาน"}
           </label>
           <select id="fac" className={selectClass} value={faculty} onChange={(e) => onFaculty(e.target.value)}>
             {faculties.map((f) => (
@@ -184,10 +187,10 @@ export function ExamApp() {
         </div>
         <div className="filter-field flex min-w-0 flex-col gap-1.5">
           <label htmlFor="cur" className="text-xs font-medium tracking-wide text-ink-2">
-            หลักสูตรหรือสาขา
+            {english ? "Curriculum" : "หลักสูตรหรือสาขา"}
           </label>
           <select id="cur" className={selectClass} value={curriculum} onChange={(e) => onCurriculum(e.target.value)}>
-            <option value={ALL}>ทุกหลักสูตรในคณะนี้ ({curriculums.length})</option>
+            <option value={ALL}>{english ? "All curricula in this faculty" : "ทุกหลักสูตรในคณะนี้"} ({curriculums.length})</option>
             {curriculums.map((c) => (
               <option key={c.name} value={c.name}>
                 {c.name || NO_CURRICULUM_LABEL}
@@ -197,10 +200,10 @@ export function ExamApp() {
         </div>
         <div className="filter-field flex min-w-0 flex-col gap-1.5">
           <label htmlFor="yr" className="text-xs font-medium tracking-wide text-ink-2">
-            ชั้นปี
+            {english ? "Year" : "ชั้นปี"}
           </label>
           <select id="yr" className={selectClass} value={year} onChange={(e) => setYear(e.target.value)}>
-            <option value={ALL}>ทุกชั้นปี</option>
+            <option value={ALL}>{english ? "All years" : "ทุกชั้นปี"}</option>
             {years.map((y) => (
               <option key={y} value={String(y)}>
                 {yearLabel(y)}
@@ -210,23 +213,23 @@ export function ExamApp() {
         </div>
         <div className="filter-segment sm:col-span-3">
           <Segmented<ExamKind>
-            label="การสอบ"
+            label={english ? "Exam type" : "การสอบ"}
             value={kind}
             onChange={setKind}
             options={[
-              { value: "midterm", label: "สอบกลางภาค" },
-              { value: "final", label: "สอบปลายภาค" },
+              { value: "midterm", label: english ? "Midterm" : "สอบกลางภาค" },
+              { value: "final", label: english ? "Final" : "สอบปลายภาค" },
             ]}
           />
         </div>
         <div className="filter-segment sm:col-span-3">
           <Segmented<ViewMode>
-            label="มุมมอง"
+            label={english ? "View" : "มุมมอง"}
             value={view}
             onChange={setView}
             options={[
-              { value: "grid", label: "ตารางตามเวลา" },
-              { value: "list", label: "รายการ" },
+              { value: "grid", label: english ? "Timeline" : "ตารางตามเวลา" },
+              { value: "list", label: english ? "List" : "รายการ" },
             ]}
           />
         </div>

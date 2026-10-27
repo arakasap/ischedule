@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useLanguage } from "@/components/language-provider";
 
 type ViewTransitionDocument = Document & {
   startViewTransition?: (update: () => void) => void;
@@ -8,6 +9,8 @@ type ViewTransitionDocument = Document & {
 
 export function ThemeToggle() {
   const [dark, setDark] = useState(false);
+  const { language } = useLanguage();
+  const english = language === "en";
 
   useEffect(() => {
     const saved = window.localStorage.getItem("theme");
@@ -37,9 +40,9 @@ export function ThemeToggle() {
     <button
       type="button"
       onClick={toggleTheme}
-      aria-label={dark ? "เปลี่ยนเป็นโหมดสว่าง" : "เปลี่ยนเป็นโหมดมืด"}
-      title={dark ? "โหมดสว่าง" : "โหมดมืด"}
-      className="inline-flex h-8 min-w-[8px] items-center justify-center rounded-lg border border-line px-3 text-ink-2 transition-colors hover:border-accent hover:text-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+      aria-label={dark ? (english ? "Switch to light mode" : "เปลี่ยนเป็นโหมดสว่าง") : (english ? "Switch to dark mode" : "เปลี่ยนเป็นโหมดมืด")}
+      title={dark ? (english ? "Light mode" : "โหมดสว่าง") : (english ? "Dark mode" : "โหมดมืด")}
+      className="theme-toggle nav-action-button inline-flex h-10 w-10 items-center justify-center rounded-xl border border-line text-ink-2 transition-colors hover:border-accent hover:text-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
     >
       {dark ? (
         <svg aria-hidden="true" viewBox="0 0 24 24" className="h-4 w-4 fill-none stroke-current" strokeWidth="1.8">

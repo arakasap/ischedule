@@ -2,6 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import { useEffect, useLayoutEffect, useState } from "react";
+import { useLanguage } from "@/components/language-provider";
 
 type IntroState = "visible" | "leaving" | "hidden";
 
@@ -9,6 +10,8 @@ export function IntroScreen() {
   const [state, setState] = useState<IntroState>("visible");
   const pathname = usePathname();
   const isPersonal = pathname === "/my";
+  const { language } = useLanguage();
+  const english = language === "en";
 
   useLayoutEffect(() => {
     const previousRestoration = window.history.scrollRestoration;
@@ -71,7 +74,7 @@ export function IntroScreen() {
       <div className="intro-content">
         <div className="intro-mark" aria-hidden="true">i</div>
         <p className="intro-title">&lt;i&gt;schedule</p>
-        <p className="intro-subtitle">{isPersonal ? "ตารางสอบส่วนตัว" : "ตารางสอบ KMITL"}</p>
+        <p className="intro-subtitle">{isPersonal ? (english ? "My exam schedule" : "ตารางสอบส่วนตัว") : (english ? "KMITL exam schedule" : "ตารางสอบ KMITL")}</p>
         <div className="intro-progress" aria-hidden="true"><span /></div>
       </div>
     </div>

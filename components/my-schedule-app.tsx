@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { AuthButton } from "@/components/auth-button";
 import { useAuth } from "@/components/auth-provider";
+import { useLanguage } from "@/components/language-provider";
 import { ExamCountdown } from "@/components/exam-countdown";
 import { ExamList } from "@/components/exam-list";
 import { TimetableGrid } from "@/components/timetable-grid";
@@ -14,6 +15,8 @@ const STORAGE_KEY = "ischedule-my-course-codes";
 
 export function MyScheduleApp() {
   const { user, loading: authLoading, error: authError } = useAuth();
+  const { language } = useLanguage();
+  const english = language === "en";
   const [rows, setRows] = useState<Offering[]>([]);
   const [codes, setCodes] = useState<string[]>([]);
   const [input, setInput] = useState("");
@@ -91,8 +94,8 @@ export function MyScheduleApp() {
   const selectedNames = useMemo(() => new Map(selectedRows.map((row) => [row.code, row.nameTh || row.name || "ไม่พบชื่อวิชา"])), [selectedRows]);
   const subjectCount = new Set(result.scheduled.map((group) => group.code)).size;
 
-  if (authLoading) return <div className="personal-page-content mx-auto w-full max-w-5xl px-3 py-10 text-center text-sm text-ink-2">กำลังตรวจสอบบัญชี KMITL…</div>;
-  if (!user) return <div className="personal-page-content mx-auto flex w-full max-w-5xl flex-col items-center gap-4 px-3 py-16 text-center"><div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-accent text-2xl font-bold text-accent-ink">i</div><h1 className="text-2xl font-bold">เข้าสู่ระบบเพื่อสร้างตารางส่วนตัว</h1><p className="max-w-md text-sm leading-6 text-ink-2">ใช้ Google Account ของ KMITL ที่ลงท้ายด้วย <b className="text-ink">@kmitl.ac.th</b> เพื่อเข้าใช้งานตารางส่วนตัว</p><AuthButton />{authError && <p role="alert" className="max-w-md rounded-xl bg-warn-soft px-3 py-2 text-sm text-warn-ink">{authError}</p>}</div>;
+  if (authLoading) return <div className="personal-page-content mx-auto w-full max-w-5xl px-3 py-10 text-center text-sm text-ink-2">{english ? "Checking your KMITL account…" : "กำลังตรวจสอบบัญชี KMITL…"}</div>;
+  if (!user) return <div className="personal-page-content mx-auto flex w-full max-w-5xl flex-col items-center gap-4 px-3 py-16 text-center"><div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-accent text-2xl font-bold text-accent-ink">i</div><h1 className="text-2xl font-bold">{english ? "Sign in to create your personal schedule" : "เข้าสู่ระบบเพื่อสร้างตารางส่วนตัว"}</h1><p className="max-w-md text-sm leading-6 text-ink-2">{english ? <>Use your KMITL Google account ending in <b className="text-ink">@kmitl.ac.th</b> to access your personal schedule.</> : <>ใช้ Google Account ของ KMITL ที่ลงท้ายด้วย <b className="text-ink">@kmitl.ac.th</b> เพื่อเข้าใช้งานตารางส่วนตัว</>}</p><AuthButton />{authError && <p role="alert" className="max-w-md rounded-xl bg-warn-soft px-3 py-2 text-sm text-warn-ink">{authError}</p>}</div>;
 
   function addCode() {
     const query = input.trim().toLocaleLowerCase();
@@ -119,33 +122,33 @@ export function MyScheduleApp() {
     <div className="personal-page-content mx-auto flex w-full max-w-5xl flex-col gap-4 px-3 py-5 pb-10 sm:gap-5 sm:px-4 sm:py-6 sm:pb-12">
       <header className="text-center sm:py-3">
         <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-2xl bg-accent text-xl font-bold text-accent-ink shadow-sm">i</div>
-        <p className="text-sm font-medium text-accent">&lt;i&gt;schedule · ตารางของฉัน</p>
-        <h1 className="mt-1 text-2xl font-bold leading-tight sm:text-4xl">ตารางสอบส่วนตัว</h1>
-        <p className="mx-auto mt-2 max-w-2xl text-sm leading-6 text-ink-2 sm:text-base">เลือกรายวิชาที่ลงทะเบียน แล้วดูตารางสอบในรูปแบบเดียวกับหน้าหลัก</p>
+        <p className="text-sm font-medium text-accent">&lt;i&gt;schedule · {english ? "My schedule" : "ตารางของฉัน"}</p>
+        <h1 className="mt-1 text-2xl font-bold leading-tight sm:text-4xl">{english ? "My exam schedule" : "ตารางสอบส่วนตัว"}</h1>
+        <p className="mx-auto mt-2 max-w-2xl text-sm leading-6 text-ink-2 sm:text-base">{english ? "Choose your registered courses and view them in the same format as the main schedule." : "เลือกรายวิชาที่ลงทะเบียน แล้วดูตารางสอบในรูปแบบเดียวกับหน้าหลัก"}</p>
       </header>
 
       <section className="surface-lift overflow-hidden rounded-2xl border border-line bg-surface">
-        <div className="border-b border-line bg-accent-soft px-4 py-4 sm:px-5"><h2 className="font-semibold">เลือกวิชาที่ลงทะเบียน</h2><p className="mt-1 text-sm text-ink-2">ค้นหาด้วยรหัสหรือชื่อวิชา แล้วกดเพิ่มเพื่อจัดตารางสอบส่วนตัว</p></div>
+        <div className="border-b border-line bg-accent-soft px-4 py-4 sm:px-5"><h2 className="font-semibold">{english ? "Choose registered courses" : "เลือกวิชาที่ลงทะเบียน"}</h2><p className="mt-1 text-sm text-ink-2">{english ? "Search by course code or name, then add courses to your personal schedule." : "ค้นหาด้วยรหัสหรือชื่อวิชา แล้วกดเพิ่มเพื่อจัดตารางสอบส่วนตัว"}</p></div>
         <div className="space-y-4 p-4 sm:p-5">
           <div className="flex flex-col gap-2 sm:flex-row">
             <label className="sr-only" htmlFor="course-search">ค้นหารายวิชา</label>
             <input id="course-search" value={input} onChange={(event) => setInput(event.target.value)} onKeyDown={(event) => { if (event.key === "Enter") addCode(); }} list="course-codes" placeholder="ค้นหาด้วยรหัส หรือชื่อวิชา" aria-label="ค้นหาด้วยรหัส หรือชื่อวิชา" className="min-h-12 flex-1 rounded-xl border border-line bg-bg px-3 py-2 text-sm text-ink shadow-sm focus-visible:outline-2 focus-visible:outline-accent" />
             <datalist id="course-codes">{availableCodes.map((code) => <option key={code} value={code}>{selectedNames.get(code) ?? ""}</option>)}</datalist>
-            <button type="button" onClick={addCode} disabled={loading || filteredCatalog.length === 0} className="min-h-12 rounded-xl bg-accent px-5 py-2 text-sm font-semibold text-accent-ink shadow-sm transition hover:brightness-105 disabled:opacity-60">เพิ่มวิชาที่พบ</button>
+            <button type="button" onClick={addCode} disabled={loading || filteredCatalog.length === 0} className="min-h-12 rounded-xl bg-accent px-5 py-2 text-sm font-semibold text-accent-ink shadow-sm transition hover:brightness-105 disabled:opacity-60">{english ? "Add course" : "เพิ่มวิชาที่พบ"}</button>
           </div>
           <div className="grid gap-3 sm:grid-cols-2">
             <label className="space-y-1.5 text-sm font-medium">
-              <span>คณะ</span>
+              <span>{english ? "Faculty" : "คณะ"}</span>
               <select value={facultyFilter} onChange={(event) => setFacultyFilter(event.target.value)} className="min-h-11 w-full rounded-xl border border-line bg-bg px-3 py-2 text-sm text-ink focus-visible:outline-2 focus-visible:outline-accent">
-                <option value="">ทุกคณะ</option>
+                <option value="">{english ? "All faculties" : "ทุกคณะ"}</option>
                 {faculties.map((faculty) => <option key={faculty} value={faculty}>{faculty}</option>)}
               </select>
             </label>
             <label className="space-y-1.5 text-sm font-medium">
-              <span>ชั้นปี</span>
+              <span>{english ? "Year" : "ชั้นปี"}</span>
               <select value={yearFilter} onChange={(event) => setYearFilter(event.target.value)} className="min-h-11 w-full rounded-xl border border-line bg-bg px-3 py-2 text-sm text-ink focus-visible:outline-2 focus-visible:outline-accent">
-                <option value="">ทุกชั้นปี</option>
-                {years.map((year) => <option key={year} value={year}>ชั้นปีที่ {year}</option>)}
+                <option value="">{english ? "All years" : "ทุกชั้นปี"}</option>
+                {years.map((year) => <option key={year} value={year}>{english ? `Year ${year}` : `ชั้นปีที่ ${year}`}</option>)}
               </select>
             </label>
           </div>
