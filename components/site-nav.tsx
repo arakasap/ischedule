@@ -14,7 +14,7 @@ export function SiteNav() {
   const navRef = useRef<HTMLElement>(null);
   const { language } = useLanguage();
   const english = language === "en";
-  const isSchedulePage = pathname === "/";
+  const isSchedulePage = pathname === "/" || pathname === "/schedule";
   const isPersonalPage = pathname === "/my";
 
   const navLinkClass = (active: boolean) => [
@@ -65,7 +65,7 @@ export function SiteNav() {
           <span className="hidden text-sm tracking-tight sm:inline sm:text-base">&lt;i&gt;schedule</span>
         </a>
         <div id="site-navigation-links" className={`nav-links ${menuOpen ? "is-open" : ""}`}>
-          <a href="/?view=schedule" onClick={() => setMenuOpen(false)} className={navLinkClass(isSchedulePage)} aria-current={isSchedulePage ? "page" : undefined}>{english ? "Exam schedule" : "ตารางสอบ"}</a>
+          <a href="/schedule" onClick={() => setMenuOpen(false)} className={navLinkClass(isSchedulePage)} aria-current={isSchedulePage ? "page" : undefined}>{english ? "Exam schedule" : "ตารางสอบ"}</a>
           <a href="/my" onClick={() => setMenuOpen(false)} className={navLinkClass(isPersonalPage)} aria-current={isPersonalPage ? "page" : undefined}>{english ? "My schedule" : "ของฉัน"}</a>
           <div className="mobile-menu-account">
             <AuthButton />
