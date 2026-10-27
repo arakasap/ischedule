@@ -28,6 +28,9 @@ export interface Offering {
   cond: string;
   seats: string;
   enrolled: string;
+  /** ข้อมูลเสริมจาก REG แบบเรียลไทม์ */
+  track?: string | null;
+  remark?: string;
 }
 
 export interface Dataset {

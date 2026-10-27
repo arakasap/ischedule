@@ -5,6 +5,7 @@ import { type ExamGroup, DOW, dateParts, sectionsOf, thaiDate } from "@/lib/exam
 
 interface Props {
   groups: ExamGroup[];
+  spotlight?: boolean;
 }
 
 interface UpcomingExam {
@@ -43,7 +44,7 @@ function formatCountdown(milliseconds: number): { days: string; hours: string; m
   };
 }
 
-export function ExamCountdown({ groups }: Props) {
+export function ExamCountdown({ groups, spotlight = true }: Props) {
   const [now, setNow] = useState(() => new Date());
   const cardRef = useRef<HTMLElement>(null);
   useEffect(() => {
@@ -52,6 +53,7 @@ export function ExamCountdown({ groups }: Props) {
   }, []);
 
   useEffect(() => {
+    if (!spotlight) return;
     let returnTimer: number | undefined;
     let revealTimer: number | undefined;
     let cleanupTimer: number | undefined;
@@ -66,6 +68,7 @@ export function ExamCountdown({ groups }: Props) {
       document.documentElement.dataset.countdownStage = "spotlight";
       card.style.setProperty("--countdown-target-width", `${card.getBoundingClientRect().width}px`);
       card.classList.add("countdown-spotlight-flight");
+      window.dispatchEvent(new Event("spotlight-started"));
 
       returnTimer = window.setTimeout(() => {
         document.documentElement.dataset.countdownStage = "returning";
@@ -82,16 +85,25 @@ export function ExamCountdown({ groups }: Props) {
       }, centerPause + 360);
     }
 
-    window.addEventListener("intro-complete", spotlightCountdown);
-    if (document.documentElement.dataset.introDone === "true") spotlightCountdown();
+    // Put the clean stage in place before the intro disappears, so there is
+    // no frame where the page content flashes behind the spotlight card.
+    const introDone = document.documentElement.dataset.introDone === "true";
+    if (cardRef.current && !introDone) {
+      document.documentElement.dataset.countdownReady = "true";
+      document.documentElement.dataset.countdownStage = "spotlight-ready";
+      window.addEventListener("intro-complete", spotlightCountdown);
+    }
 
     return () => {
       window.removeEventListener("intro-complete", spotlightCountdown);
+      if (document.documentElement.dataset.introDone !== "true") {
+        delete document.documentElement.dataset.countdownReady;
+      }
       if (returnTimer) window.clearTimeout(returnTimer);
       if (revealTimer) window.clearTimeout(revealTimer);
       if (cleanupTimer) window.clearTimeout(cleanupTimer);
     };
-  }, []);
+  }, [spotlight]);
 
   const upcoming = useMemo(() => findUpcoming(groups, now), [groups, now]);
   if (!upcoming) {

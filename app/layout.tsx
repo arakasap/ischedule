@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { IntroScreen } from "@/components/intro-screen";
+import { AuthProvider } from "@/components/auth-provider";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -28,9 +29,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap"
         />
       </head>
-      <body>
+      <body suppressHydrationWarning>
         <IntroScreen />
-        {children}
+        <AuthProvider>{children}</AuthProvider>
       </body>
     </html>
   );

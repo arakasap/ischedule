@@ -579,11 +579,32 @@ html[data-countdown-stage="spotlight"] .page-content > .countdown-card {
 
 html[data-countdown-stage="spotlight"] .site-nav,
 html[data-countdown-stage="spotlight"] .page-footer,
+html[data-countdown-stage="spotlight-ready"] .site-nav,
+html[data-countdown-stage="spotlight-ready"] .page-footer,
 html[data-countdown-stage="spotlight"] .page-content > *:not(.countdown-card) {
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
   animation: none;
+}
+
+html[data-countdown-stage="spotlight-ready"] .page-content > *:not(.countdown-card),
+html[data-countdown-stage="spotlight-ready"] .page-content > .countdown-card {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  animation: none;
+}
+
+/* Keep the spotlight sequence on a clean stage; the countdown card sits above it. */
+html[data-countdown-stage="spotlight"]::before,
+html[data-countdown-stage="returning"]::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 70;
+  background: var(--bg);
+  pointer-events: none;
 }
 
 html[data-countdown-stage="returning"] .site-nav,

@@ -251,7 +251,7 @@ export function ExamApp() {
         </button>
       </div>
 
-      <ExamCountdown groups={result.scheduled} />
+      <ExamCountdown groups={result.scheduled} spotlight={false} />
 
       {result.scheduled.length === 0 ? (
         <div className="rounded-xl border border-line bg-surface px-4 py-10 text-center text-ink-2">
