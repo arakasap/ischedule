@@ -5,8 +5,24 @@ import { LanguageProvider } from "@/components/language-provider";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "<i>schedule · ตารางสอบ KMITL",
-  description: "ค้นหาตารางสอบ KMITL แยกตามคณะ หลักสูตร และชั้นปี",
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "https://ischedule-arak.vercel.app"),
+  title: "ตารางสอบ KMITL | iSchedule",
+  description: "ค้นหาตารางสอบ KMITL และตารางสอบลาดกระบัง แยกตามคณะ หลักสูตร และชั้นปี พร้อมดูตารางสอบส่วนตัว",
+  keywords: [
+    "ตารางสอบ KMITL",
+    "ตารางสอบลาดกระบัง",
+    "ตารางสอบสถาบันเทคโนโลยีพระจอมเกล้าเจ้าคุณทหารลาดกระบัง",
+    "iSchedule",
+  ],
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    title: "ตารางสอบ KMITL | iSchedule",
+    description: "ค้นหาและจัดตารางสอบ KMITL ได้ง่ายในที่เดียว",
+    type: "website",
+    locale: "th_TH",
+  },
   icons: {
     icon: "/schedule-icon.svg",
     apple: "/schedule-icon.svg",
