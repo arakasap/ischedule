@@ -7,6 +7,7 @@ import {
   hourRange,
   layoutLanes,
   sectionsOf,
+  thaiDate,
   typesOf,
   visibleDates,
 } from "@/lib/exam-utils";
@@ -35,6 +36,14 @@ export function TimetableGrid({ groups, byDate, banner }: Props) {
   const gridLines = `repeating-linear-gradient(to right, transparent 0, transparent calc(${colPct}% - 1px), var(--line) calc(${colPct}% - 1px), var(--line) ${colPct}%)`;
 
   return (
+    <>
+      <div className="sr-only">
+        <table>
+          <caption>ตารางสอบรายวิชา วัน เวลา และกลุ่มเรียน</caption>
+          <thead><tr><th scope="col">วันสอบ</th><th scope="col">เวลา</th><th scope="col">รหัสวิชา</th><th scope="col">รายวิชา</th><th scope="col">กลุ่ม</th></tr></thead>
+          <tbody>{groups.map((group) => <tr key={`semantic-${group.key}`}><td>{thaiDate(group.info.date)}</td><td>{group.info.label}</td><td>{group.code}</td><td>{group.name}</td><td>{sectionsOf(group)}</td></tr>)}</tbody>
+        </table>
+      </div>
     <section aria-label="ตารางสอบตามเวลา" className="surface-lift overflow-hidden rounded-2xl border border-line bg-surface">
       <div className="flex flex-wrap items-center justify-between gap-3 border-b border-accent/20 bg-accent-soft px-4 py-3.5">
         <div className="flex items-center gap-2 text-sm font-medium text-accent">
@@ -160,5 +169,6 @@ export function TimetableGrid({ groups, byDate, banner }: Props) {
         </div>
       </div>
     </section>
+    </>
   );
 }
