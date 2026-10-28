@@ -71,8 +71,12 @@ export function getExamRouteEntries(): ExamRouteEntry[] {
 }
 
 export function facultySlug(faculty: string): string {
-  const index = getExamFilterOptions().faculties.indexOf(faculty);
-  return `faculty-${index < 0 ? "unknown" : index}`;
+  let hash = 2166136261;
+  for (const character of faculty.normalize("NFKC")) {
+    hash ^= character.codePointAt(0) ?? 0;
+    hash = Math.imul(hash, 16777619);
+  }
+  return `faculty-${(hash >>> 0).toString(36)}`;
 }
 
 export function facultyFromSlug(slug: string): string | undefined {
